@@ -18,6 +18,13 @@ It doesn't depend on the taskbar, so it still works with auto-hide on or in full
 | Chinese IME, English mode (Shift) | **英** 英文模式 |
 | Caps Lock on | caption gets `· CAPS` |
 
+## Download
+Get `LangPop.exe` (or the zip) from the [latest release](https://github.com/seconwoo/langpop/releases/latest).
+There's no installer: put it anywhere and run it. It works on Windows 10 and 11 with nothing else to install.
+
+The exe isn't code-signed, so on first run SmartScreen may say "Windows protected your PC".
+Click **More info**, then **Run anyway**.
+
 ## Build
 Needs no SDK. It uses the C# compiler that ships with Windows (.NET Framework 4.x):
 
@@ -28,7 +35,7 @@ powershell -ExecutionPolicy Bypass -File build.ps1
 This produces `bin\LangPop.exe`.
 
 ## Use
-- Run `bin\LangPop.exe`. Only one copy runs at a time.
+- Run `LangPop.exe`. Only one copy runs at a time.
 - Tray icon: left-click shows the current state. The right-click menu has:
   - **Theme**: Auto (follows Windows light/dark), Dark, Light, Glass, Frost, Midnight, Accent (your Windows accent color), Sakura, Terminal.
     - **Compact size** (at the bottom of the Theme menu) shrinks the popup to a small glyph-only badge in any theme.
@@ -59,3 +66,18 @@ using the same fade and slide timing as the real app. To rebuild them (needs Pyt
 ```
 powershell -ExecutionPolicy Bypass -File tools\make-demo.ps1
 ```
+
+## Releasing
+Push a version tag. GitHub Actions ([release.yml](.github/workflows/release.yml)) builds on Windows, stamps the
+version into the exe, and publishes a release with the zip, the standalone exe and SHA256 checksums:
+
+```
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+To build the same package locally, run `powershell -ExecutionPolicy Bypass -File package.ps1 -Version 1.2.3`.
+The output goes to `dist\`.
+
+## License
+[Apache License 2.0](LICENSE)

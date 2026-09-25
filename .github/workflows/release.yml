@@ -1,0 +1,39 @@
+name: Release
+
+# Push a tag like v1.2.3 to build LangPop on Windows and publish a GitHub release.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and package
+        shell: powershell
+        run: .\package.ps1 -Version "${{ github.ref_name }}"
+
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          cat > notes.md <<EOF
+          ## Download
+          - **LangPop-${VERSION}-win.zip**: LangPop.exe with the README and license
+          - **LangPop.exe**: just the app; put it anywhere and run it
+
+          No installer and nothing else to install. Needs Windows 10 or 11 (uses the built-in .NET Framework 4.8).
+
+          The exe isn't code-signed, so the first time you run it Windows SmartScreen may say
+          "Windows protected your PC". Click **More info**, then **Run anyway**.
+          Checksums are in SHA256SUMS.txt.
+          EOF
+          gh release create "$TAG" dist/* --title "LangPop $TAG" --notes-file notes.md --generate-notes
