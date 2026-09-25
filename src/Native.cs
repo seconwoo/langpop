@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     internal static class Native
     {

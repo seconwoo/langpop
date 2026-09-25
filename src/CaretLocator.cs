@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     /// <summary>Finds the on-screen text caret of the foreground window, falling back to the mouse.</summary>
     internal static class CaretLocator

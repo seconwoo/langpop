@@ -1,4 +1,4 @@
-# Language Indicator
+# LangPop
 
 A tiny Windows 11 tray app. When you change the input language (Win+Space, Alt+Shift) or press Shift to toggle
 Chinese/English inside an IME such as Microsoft Pinyin, a translucent popup fades in next to the text caret (or next to the mouse if there's no caret), then fades out.
@@ -20,17 +20,17 @@ Needs no SDK. It uses the C# compiler that ships with Windows (.NET Framework 4.
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-This produces `bin\LanguageIndicator.exe`.
+This produces `bin\LangPop.exe`.
 
 ## Use
-- Run `bin\LanguageIndicator.exe`. Only one copy runs at a time.
+- Run `bin\LangPop.exe`. Only one copy runs at a time.
 - Tray icon: left-click shows the current state. The right-click menu has:
   - **Theme**: Auto (follows Windows light/dark), Dark, Light, Glass, Frost, Midnight, Accent (your Windows accent color), Sakura, Terminal.
     - **Compact size** (at the bottom of the Theme menu) shrinks the popup to a small glyph-only badge in any theme.
       An underline marks native input mode (e.g. 中), and ⇪ appears when Caps Lock is on.
   - **Background opacity**: 15% / 30% / 45% (default) / 60% / 80%. Lower is more see-through. Text gets a soft halo so it stays readable.
   - **Start with Windows**, **Exit**.
-- Picking a theme or opacity previews it right away. Settings are saved in `HKCU\Software\LanguageIndicator`.
+- Picking a theme or opacity previews it right away. Settings are saved in `HKCU\Software\LangPop`.
 
 ### Themes
 All themes at the default 45% background opacity, in standard and compact size:

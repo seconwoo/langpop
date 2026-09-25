@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using Microsoft.Win32;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     /// <summary>Visual style of the popup. Fill alpha is controlled separately by the opacity setting.</summary>
     internal sealed class Theme
@@ -97,10 +97,29 @@ namespace LanguageIndicator
         }
     }
 
-    /// <summary>User preferences persisted under HKCU\Software\LanguageIndicator.</summary>
+    /// <summary>User preferences persisted under HKCU\Software\LangPop.</summary>
     internal static class Settings
     {
-        private const string Key = @"Software\LanguageIndicator";
+        private const string Key = @"Software\LangPop";
+        private const string LegacyKey = @"Software\LanguageIndicator";   // name before the LangPop rename
+
+        /// <summary>Copies preferences saved under the old app name, once.</summary>
+        public static void MigrateLegacy()
+        {
+            try
+            {
+                using (var existing = Registry.CurrentUser.OpenSubKey(Key))
+                    if (existing != null) return;
+                using (var old = Registry.CurrentUser.OpenSubKey(LegacyKey))
+                {
+                    if (old == null) return;
+                    using (var k = Registry.CurrentUser.CreateSubKey(Key))
+                        foreach (string name in old.GetValueNames()) k.SetValue(name, old.GetValue(name));
+                }
+                Registry.CurrentUser.DeleteSubKeyTree(LegacyKey, false);
+            }
+            catch { }
+        }
 
         public static string ThemeName
         {

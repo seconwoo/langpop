@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     internal static class Program
     {
@@ -14,9 +14,10 @@ namespace LanguageIndicator
         private static void Main()
         {
             bool created;
-            using (var mutex = new Mutex(true, @"Local\LanguageIndicator_5b1e0c7a", out created))
+            using (var mutex = new Mutex(true, @"Local\LangPop_5b1e0c7a", out created))
             {
                 if (!created) return;
+                Settings.MigrateLegacy();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 using (var app = new TrayApp())
@@ -29,7 +30,8 @@ namespace LanguageIndicator
     internal sealed class TrayApp : IDisposable
     {
         private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-        private const string RunValue = "LanguageIndicator";
+        private const string RunValue = "LangPop";
+        private const string LegacyRunValue = "LanguageIndicator";   // name before the LangPop rename
 
         private readonly InputStateMonitor _monitor = new InputStateMonitor();
         private readonly OsdWindow _osd = new OsdWindow();
@@ -39,6 +41,7 @@ namespace LanguageIndicator
 
         public TrayApp()
         {
+            MigrateAutostart();
             var menu = new ContextMenuStrip();
             _autostart = new ToolStripMenuItem("Start with Windows", null, delegate { ToggleAutostart(); });
             _autostart.Checked = IsAutostart();
@@ -130,7 +133,7 @@ namespace LanguageIndicator
         private void UpdateTray(InputState state)
         {
             string glyph = state.Glyph;
-            _tray.Text = "Language Indicator — " + state.Caption;
+            _tray.Text = "LangPop — " + state.Caption;
 
             using (var bmp = new Bitmap(32, 32))
             using (var g = Graphics.FromImage(bmp))
@@ -158,6 +161,21 @@ namespace LanguageIndicator
         {
             using (var k = Registry.CurrentUser.OpenSubKey(RunKey))
                 return k != null && k.GetValue(RunValue) != null;
+        }
+
+        /// <summary>Moves a startup entry created under the old app name over to this executable.</summary>
+        private static void MigrateAutostart()
+        {
+            try
+            {
+                using (var k = Registry.CurrentUser.OpenSubKey(RunKey, true))
+                {
+                    if (k == null || k.GetValue(LegacyRunValue) == null) return;
+                    k.DeleteValue(LegacyRunValue, false);
+                    k.SetValue(RunValue, "\"" + Application.ExecutablePath + "\"");
+                }
+            }
+            catch { }
         }
 
         private void ToggleAutostart()

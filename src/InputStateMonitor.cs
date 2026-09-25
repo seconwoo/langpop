@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     /// <summary>Snapshot of the foreground input state.</summary>
     internal struct InputState

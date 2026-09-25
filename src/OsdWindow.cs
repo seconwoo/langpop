@@ -7,7 +7,7 @@ using System.Drawing.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace LanguageIndicator
+namespace LangPop
 {
     /// <summary>
     /// Click-through, non-activating, per-pixel-alpha popup that fades/slides in near the caret.
@@ -33,7 +33,7 @@ namespace LanguageIndicator
         {
             var cp = new CreateParams
             {
-                Caption = "LanguageIndicatorOSD",
+                Caption = "LangPopOSD",
                 Style = Native.WS_POPUP,
                 ExStyle = Native.WS_EX_LAYERED | Native.WS_EX_TRANSPARENT | Native.WS_EX_TOOLWINDOW
                           | Native.WS_EX_NOACTIVATE | Native.WS_EX_TOPMOST,

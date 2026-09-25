@@ -4,16 +4,16 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
 $root = Split-Path $PSScriptRoot -Parent
-$exe  = Join-Path $root 'bin\LanguageIndicator.exe'
+$exe  = Join-Path $root 'bin\LangPop.exe'
 if (-not (Test-Path $exe)) { & (Join-Path $root 'build.ps1') }
 $docs = Join-Path $root 'docs'
 New-Item -ItemType Directory -Force $docs | Out-Null
 
 $asm      = [Reflection.Assembly]::LoadFrom($exe)
-$stateT   = $asm.GetType('LanguageIndicator.InputState')
-$themeT   = $asm.GetType('LanguageIndicator.Theme')
-$renderFn = $asm.GetType('LanguageIndicator.OsdWindow').GetMethod('Render', [Reflection.BindingFlags]'NonPublic,Static')
-$marginFn = $asm.GetType('LanguageIndicator.OsdWindow').GetMethod('ShadowMargin', [Reflection.BindingFlags]'NonPublic,Static')
+$stateT   = $asm.GetType('LangPop.InputState')
+$themeT   = $asm.GetType('LangPop.Theme')
+$renderFn = $asm.GetType('LangPop.OsdWindow').GetMethod('Render', [Reflection.BindingFlags]'NonPublic,Static')
+$marginFn = $asm.GetType('LangPop.OsdWindow').GetMethod('ShadowMargin', [Reflection.BindingFlags]'NonPublic,Static')
 
 function New-State([int]$lang, [bool]$native) {
     $s = [Activator]::CreateInstance($stateT)
