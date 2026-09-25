@@ -119,6 +119,13 @@ namespace LanguageIndicator
             set { Write("Opacity", value.ToString()); }
         }
 
+        /// <summary>Glyph-only badge instead of the full popup with caption.</summary>
+        public static bool Compact
+        {
+            get { return Read("Compact", "0") == "1"; }
+            set { Write("Compact", value ? "1" : "0"); }
+        }
+
         private static string Read(string name, string fallback)
         {
             try

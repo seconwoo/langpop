@@ -26,12 +26,14 @@ This produces `bin\LanguageIndicator.exe`.
 - Run `bin\LanguageIndicator.exe`. Only one copy runs at a time.
 - Tray icon: left-click shows the current state. The right-click menu has:
   - **Theme**: Auto (follows Windows light/dark), Dark, Light, Glass, Frost, Midnight, Accent (your Windows accent color), Sakura, Terminal.
+    - **Compact size** (at the bottom of the Theme menu) shrinks the popup to a small glyph-only badge in any theme.
+      An underline marks native input mode (e.g. 中), and ⇪ appears when Caps Lock is on.
   - **Background opacity**: 15% / 30% / 45% (default) / 60% / 80%. Lower is more see-through. Text gets a soft halo so it stays readable.
   - **Start with Windows**, **Exit**.
 - Picking a theme or opacity previews it right away. Settings are saved in `HKCU\Software\LanguageIndicator`.
 
 ### Themes
-All themes shown at the default 45% background opacity:
+All themes at the default 45% background opacity, in standard and compact size:
 
 ![Theme gallery](docs/themes.png)
 

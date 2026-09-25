@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Threading;
@@ -69,6 +70,7 @@ namespace LanguageIndicator
         {
             var root = new ToolStripMenuItem("Theme");
             string current = Settings.ThemeName;
+            var themeItems = new List<ToolStripMenuItem>();
             foreach (string name in Theme.Names)
             {
                 string n = name;
@@ -77,11 +79,23 @@ namespace LanguageIndicator
                 item.Click += delegate
                 {
                     Settings.ThemeName = n;
-                    foreach (ToolStripMenuItem i in root.DropDownItems) i.Checked = i == item;
+                    foreach (ToolStripMenuItem i in themeItems) i.Checked = i == item;
                     ShowCurrent();
                 };
+                themeItems.Add(item);
                 root.DropDownItems.Add(item);
             }
+
+            root.DropDownItems.Add(new ToolStripSeparator());
+            var compact = new ToolStripMenuItem("Compact size");
+            compact.Checked = Settings.Compact;
+            compact.Click += delegate
+            {
+                Settings.Compact = !Settings.Compact;
+                compact.Checked = Settings.Compact;
+                ShowCurrent();
+            };
+            root.DropDownItems.Add(compact);
             return root;
         }
 

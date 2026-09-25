@@ -21,8 +21,8 @@ function New-State([int]$lang, [bool]$native) {
     $stateT.GetField('Native').SetValue($s, $native)
     $s
 }
-function Render-Popup($state, [single]$scale, [string]$theme, [int]$opacity) {
-    $renderFn.Invoke($null, @($state, $scale, $themeT.GetMethod('Get').Invoke($null, @($theme)), $opacity))
+function Render-Popup($state, [single]$scale, [string]$theme, [int]$opacity, [bool]$compact = $false) {
+    $renderFn.Invoke($null, @($state, $scale, $themeT.GetMethod('Get').Invoke($null, @($theme)), $opacity, $compact))
 }
 function New-RoundRect([single]$x, [single]$y, [single]$w, [single]$h, [single]$r) {
     $p = New-Object Drawing.Drawing2D.GraphicsPath
@@ -146,7 +146,7 @@ Write-Host "Wrote $gif"
 
 # ---------------------------------------------------------------- themes.png
 $names = $themeT.GetField('Names').GetValue($null) | Where-Object { $_ -ne 'Auto' }
-$rowH = 84; $GW = 820; $GH = $rowH * $names.Count + 24
+$rowH = 84; $top = 34; $GW = 1010; $GH = $top + $rowH * $names.Count + 24
 $bmp = New-Object Drawing.Bitmap $GW, $GH
 $g = [Drawing.Graphics]::FromImage($bmp)
 $g.SmoothingMode = 'AntiAlias'; $g.TextRenderingHint = 'AntiAliasGridFit'
@@ -154,16 +154,26 @@ $wall = New-Object Drawing.Drawing2D.LinearGradientBrush((New-Object Drawing.Rec
     [Drawing.Color]::FromArgb(235, 238, 245), [Drawing.Color]::FromArgb(35, 60, 110), [single]15)
 $g.FillRectangle($wall, 0, 0, $GW, $GH)
 $labelFont = New-Object Drawing.Font('Segoe UI Semibold', 15, [Drawing.GraphicsUnit]::Pixel)
+$headBrush = New-Object Drawing.SolidBrush ([Drawing.Color]::FromArgb(150, 20, 20, 28))
+$compactX = 780
+$g.DrawString('Standard', $labelFont, $headBrush, 138, 14)
+$g.DrawString('Compact size', $labelFont, $headBrush, $compactX + 14, 14)
 $row = 0
 foreach ($name in $names) {
-    $y = 12 + $rowH * $row
+    $y = $top + $rowH * $row
     $chip = New-RoundRect 14 ($y + 25) 96 30 8
     $g.FillPath((New-Object Drawing.SolidBrush ([Drawing.Color]::FromArgb(170, 20, 20, 28))), $chip)
     $g.DrawString($name, $labelFont, [Drawing.Brushes]::White, 24, $y + 30)
+    $states = @((New-State 0x409 $false), (New-State 0x804 $true), (New-State 0x804 $false))
     $x = 118
-    foreach ($s in @((New-State 0x409 $false), (New-State 0x804 $true), (New-State 0x804 $false))) {
+    foreach ($s in $states) {
         $p = Render-Popup $s ([single]1.25) $name 45
         $g.DrawImage($p, $x, $y); $x += $p.Width - 6; $p.Dispose()
+    }
+    $x = $compactX
+    foreach ($s in $states) {
+        $p = Render-Popup $s ([single]1.25) $name 45 $true
+        $g.DrawImage($p, $x, $y + [int]((80 - $p.Height) / 2) + 4); $x += $p.Width - 16; $p.Dispose()
     }
     $row++
 }
