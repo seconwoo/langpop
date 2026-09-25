@@ -43,6 +43,12 @@ namespace LangPop
         {
             MigrateAutostart();
             var menu = new ContextMenuStrip();
+            menu.Items.Add(new ToolStripLabel("LangPop", LoadLogo(16))
+            {
+                Font = new Font(menu.Font, FontStyle.Bold),
+                ImageScaling = ToolStripItemImageScaling.None,
+            });
+            menu.Items.Add(new ToolStripSeparator());
             _autostart = new ToolStripMenuItem("Start with Windows", null, delegate { ToggleAutostart(); });
             _autostart.Checked = IsAutostart();
             menu.Items.Add(new ToolStripMenuItem("Show current", null, delegate { ShowCurrent(); }));
@@ -121,6 +127,24 @@ namespace LangPop
                 root.DropDownItems.Add(item);
             }
             return root;
+        }
+
+        /// <summary>The lollipop logo from the embedded icon, at the size closest to <paramref name="size"/> (DPI-scaled).</summary>
+        private static Bitmap LoadLogo(int size)
+        {
+            try
+            {
+                int px = (int)Math.Round(size * DpiScale());
+                using (var s = typeof(TrayApp).Assembly.GetManifestResourceStream("LangPop.langpop.ico"))
+                using (var icon = new Icon(s, px, px))
+                    return icon.ToBitmap();
+            }
+            catch { return null; }
+        }
+
+        private static float DpiScale()
+        {
+            using (var g = Graphics.FromHwnd(IntPtr.Zero)) return g.DpiX / 96f;
         }
 
         private void ShowCurrent()

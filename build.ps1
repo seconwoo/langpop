@@ -10,6 +10,8 @@ New-Item -ItemType Directory -Force $out | Out-Null
 & $csc /nologo /target:winexe /optimize+ /platform:anycpu /codepage:65001 `
     "/out:$out\LangPop.exe" `
     "/win32manifest:$root\app.manifest" `
+    "/win32icon:$root\assets\langpop.ico" `
+    "/resource:$root\assets\langpop.ico,LangPop.langpop.ico" `
     /r:System.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:Accessibility.dll `
     "$root\src\*.cs"
 if ($LASTEXITCODE -ne 0) { throw "Build failed ($LASTEXITCODE)" }

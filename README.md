@@ -1,4 +1,9 @@
-# LangPop
+<p align="center">
+  <img src="docs/logo.png" width="112" alt="LangPop lollipop logo">
+</p>
+
+<h1 align="center">LangPop</h1>
+<p align="center"><em>A little pop of "which language am I typing in?"</em></p>
 
 A tiny Windows 11 tray app. When you change the input language (Win+Space, Alt+Shift) or press Shift to toggle
 Chinese/English inside an IME such as Microsoft Pinyin, a translucent popup fades in next to the text caret (or next to the mouse if there's no caret), then fades out.
@@ -42,6 +47,10 @@ All themes at the default 45% background opacity, in standard and compact size:
   (`WM_IME_CONTROL`). It polls every 120 ms and also checks again right after Shift/Ctrl/Alt/Win/Space/CapsLock is released.
 - Windows that run as administrator can't be queried from a normal process. To cover those, run the app elevated.
 - If you switch to a window that uses a different language, no popup is shown, so Alt-Tab doesn't trigger one.
+
+## Logo
+The lollipop is drawn in code (`tools/Lollipop.cs`). `tools\make-icon.ps1` renders it to the multi-size
+`assets\langpop.ico`, which `build.ps1` embeds in the exe, and to `docs/logo.png`.
 
 ## Regenerating the images
 `docs/demo.gif` and `docs/themes.png` are drawn by the app's own popup renderer, composited onto a mock editor,
